@@ -1,6 +1,6 @@
 #pragma once
+#include <random>
 
-#include <boost/random.hpp>
 const static std::string CHARSET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 class Generator {
 public:
@@ -12,6 +12,6 @@ public:
     std::string generateName();
 
 private:
-    boost::random::mt19937 rng;
+    std::mt19937 rng;
     std::vector<std::string> names;
 };

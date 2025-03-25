@@ -18,17 +18,17 @@ Generator::Generator()
 }
 
 int Generator::generateInt(const int min, const int max) {
-    boost::random::uniform_int_distribution dist(min, max);
+    std::uniform_int_distribution dist(min, max);
     return dist(rng);
 }
 
 double Generator::generateDouble(const double min, const double max) {
-    const boost::random::uniform_real_distribution dist(min, max);
+    std::uniform_real_distribution dist(min, max);
     return dist(rng);
 }
 
 std::string Generator::generateString(const size_t length, const std::string &charset) {
-    const boost::random::uniform_int_distribution<size_t> dist(0, charset.size() - 1);
+    std::uniform_int_distribution<size_t> dist(0, charset.size() - 1);
     std::string result;
     result.reserve(length);
 
@@ -40,6 +40,6 @@ std::string Generator::generateString(const size_t length, const std::string &ch
 }
 
 std::string Generator::generateName() {
-    const boost::random::uniform_int_distribution<size_t> dist(0, names.size() - 1);
+    std::uniform_int_distribution<size_t> dist(0, names.size() - 1);
     return names[dist(rng)];
 }
