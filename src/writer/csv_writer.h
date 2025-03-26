@@ -2,15 +2,19 @@
 
 #include "../composer/composer.h"
 #include <string>
+#include <sstream>
 
 class CsvWriter {
 public:
-    CsvWriter(std::string file_path);
-    CsvWriter(std::string file_path, char separator);
+    CsvWriter(char separator = ',');
 
-    void write(const Composer& composer) const;
+    void write(const Composer& composer);
+
+    std::string str() const;
+
+    std::istringstream get_stream() const;
 
 private:
-    std::string file_path;
-    char separator;
+    std::stringstream buffer_;
+    char separator_;
 };

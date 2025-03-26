@@ -3,10 +3,34 @@
 #include "../../writer/csv_writer.h"
 #include <fstream>
 
+
+namespace {
+    struct CacheEntry {
+        http::response<http::string_body> response;
+    };
+
+    std::unordered_map<std::string, CacheEntry> request_cache;
+    std::mutex cache_mutex;
+}
+
 http::response<http::string_body> handle_request(const http::request<http::string_body>& req) {
     http::response<http::string_body> resp;
     resp.version(11);
     resp.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+
+    std::string cache_key = std::string(req.method_string()) +
+                           std::string(req.target()) +
+                           req.body();
+
+    {
+        std::lock_guard<std::mutex> lock(cache_mutex);
+        auto it = request_cache.find(cache_key);
+        if (it != request_cache.end()) {
+            resp = it->second.response;
+            resp.prepare_payload();
+            return resp;
+        }
+    }
 
     try {
         if (req.method() == http::verb::post && req.target() == "/generate") {
@@ -23,17 +47,10 @@ http::response<http::string_body> handle_request(const http::request<http::strin
             Composer composer(params.table_name, params.fields, gen);
             composer.compose(params.rows);
 
-            CsvWriter writer(params.output_file);
+            CsvWriter writer;
             writer.write(composer);
 
-            std::ifstream file(params.output_file, std::ios::binary);
-            if (!file.is_open()) {
-                throw std::runtime_error("Failed to open generated file");
-            }
-
-            std::string file_content((std::istreambuf_iterator<char>(file)),
-                                    std::istreambuf_iterator<char>());
-            file.close();
+            std::string file_content = writer.str();
 
             resp.result(http::status::ok);
             resp.set(http::field::content_type, "text/csv");
@@ -52,5 +69,11 @@ http::response<http::string_body> handle_request(const http::request<http::strin
     }
 
     resp.prepare_payload();
+
+    {
+        std::lock_guard<std::mutex> lock(cache_mutex);
+        request_cache[cache_key] = {resp};
+    }
+
     return resp;
 }

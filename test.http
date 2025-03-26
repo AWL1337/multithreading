@@ -3,7 +3,23 @@ Content-Type: application/json
 
 {
   "table_name": "users",
-  "rows": 100,
+  "rows": 1000000,
+  "output_file": "users.csv",
+  "fields": [
+    {"name": "id1", "type": "int", "params": {"min": "1", "max": "1000"}},
+    {"name": "name", "type": "string", "params": {"length": "10"}},
+    {"name": "age", "type": "int", "params": {"min": "18", "max": "60"}}
+  ]
+}
+
+###
+
+POST http://localhost:8080/generate
+Content-Type: application/json
+
+{
+  "table_name": "users",
+  "rows": 1000,
   "output_file": "users.csv",
   "fields": [
     {"name": "id", "type": "int", "params": {"min": "1", "max": "1000"}},
@@ -11,5 +27,4 @@ Content-Type: application/json
     {"name": "age", "type": "int", "params": {"min": "18", "max": "60"}}
   ]
 }
-
 ###
