@@ -33,8 +33,8 @@ target_link_libraries(data_forge ${Boost_LIBRARIES})
 add_executable(data_forge_tests
         tests/main.cpp
         tests/generator_tests.cpp
-        tests/composer.cpp
-        tests/csv_writer_tests.cpp
+        tests/composer_tests.cpp
+        tests/server_tests.cpp
         src/generator/generator.cpp
         src/generator/generator.h
         src/composer/composer.cpp
@@ -42,6 +42,7 @@ add_executable(data_forge_tests
         src/writer/csv_writer.cpp
         src/writer/csv_writer.h
         src/server/request/request_params.h
+        src/server/request/request_params.cpp
         src/server/request/request_handler.h
         src/server/request/request_handler.cpp
         src/server/server.cpp
