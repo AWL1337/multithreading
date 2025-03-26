@@ -2,7 +2,6 @@
 
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
-#include <memory>
 
 namespace ip = boost::asio::ip;
 namespace http = boost::beast::http;
