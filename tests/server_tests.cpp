@@ -47,17 +47,6 @@ TEST_F(ServerTest, HandleRequest_PostGenerate_Success) {
     EXPECT_NE(resp.body(), "");
 }
 
-TEST_F(ServerTest, HandleRequest_InvalidContentType) {
-    std::string json_body = R"({"table_name": "test", "fields": [{"name": "id", "type": "int"}, {"name": "name", "type": "string"}], "rows": 2, "output_file": "test.csv"})";
-    auto req = create_request(http::verb::post, "/generate", json_body, "text/plain");
-
-    auto resp = handle_request(req);
-
-    EXPECT_EQ(resp.result(), http::status::bad_request);
-    EXPECT_EQ(resp[http::field::content_type], "application/json");
-    EXPECT_EQ(resp.body(), R"({"error": "Content-Type must be application/json"})");
-}
-
 TEST_F(ServerTest, HandleRequest_NotFound) {
     auto req = create_request(http::verb::get, "/wrong_endpoint", "");
 

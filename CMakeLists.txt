@@ -35,6 +35,7 @@ add_executable(data_forge_tests
         tests/generator_tests.cpp
         tests/composer_tests.cpp
         tests/server_tests.cpp
+        tests/integration_tests.cpp
         src/generator/generator.cpp
         src/generator/generator.h
         src/composer/composer.cpp
